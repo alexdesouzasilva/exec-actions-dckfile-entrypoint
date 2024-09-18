@@ -2,14 +2,20 @@ on: [push, workflow_dispatch]
 
 jobs:
   hello_world_job:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: A job to say hello
     steps:
+      - name: Check out code
+        uses: actions/checkout@v3
       - name: Hello world action step
         id: hello
-        uses: alexdesouzasilva/actions-dckfile-entrypoint@v2
+        uses: alexdesouzasilva/actions-dckfile-entrypoint@v3
         with:
-          who-to-greet: 'Mona the Octocat'
+          projectKey: dev-sonar-actions
+          sources: src
+          url: 'http://localhost:8080'
+          login: ${{ vars.SONAR_TOKEN }}
+          version: 0.0.8
+          binaries: '.'
       # Use the output from the `hello` step
-      - name: Get the output time
-        run: echo "The time was ${{ steps.hello.outputs.time }}"
+      
